@@ -57,7 +57,7 @@ const useGem = () => {
       if (hash) setMergeGemHash(hash);
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
       setReset(true);
       setTimeout(() => {
         setReset(false);

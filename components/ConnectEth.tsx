@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useWeb3Modal } from '@web3modal/react';
+import { ConnectWalletButton } from 'wallet-connect-modal';
+import 'wallet-connect-modal/dist/wallets/phantom/styles.css';
+import 'wallet-connect-modal/dist/wallets/metamask/styles.css';
+import 'wallet-connect-modal/dist/wallets/rabby/styles.css';
+import 'wallet-connect-modal/dist/wallets/tronlink/styles.css';
+import 'wallet-connect-modal/dist/wallets/bitget/styles.css';
+import 'wallet-connect-modal/dist/wallets/coinbase/styles.css';
+import 'wallet-connect-modal/dist/wallets/solflare/styles.css';
 import { useAuth, useDisconnect } from '../hooks/useAuth';
-import Link from 'next/link';
 
 export const ConnectEth: React.FC = () => {
   const [hasMounted, setHasMounted] = useState(false);
-  const { open } = useWeb3Modal();
   const { address } = useAuth();
   const { disconnect } = useDisconnect();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -38,14 +43,14 @@ export const ConnectEth: React.FC = () => {
             </button>
             {isOpen ? (
               <ul
-                className="absolute flex flex-col top-11 left-0 border border-white w-full  rounded-xl transition-all overflow-hidden"
+                className="absolute flex flex-col top-11 left-0 border border-white w-full rounded-xl transition-all overflow-hidden"
                 aria-labelledby="navbarDropdown"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
               >
                 <li>
                   <button
-                    className=" block w-full py-2.5 px-5 text-white hover:text-black hover:bg-white"
+                    className="block w-full py-2.5 px-5 text-white hover:text-black hover:bg-white"
                     onClick={disconnect}
                   >
                     Sign Out
@@ -55,12 +60,9 @@ export const ConnectEth: React.FC = () => {
             ) : null}
           </div>
         ) : (
-          <button
-            className="block border border-white w-52 py-2.5 px-5 rounded-xl text-white hover:text-black hover:bg-white transition-all"
-            onClick={open}
-          >
-            Connect
-          </button>
+          // When no address: render the custom wallet modal button
+          // userId can be set to a fixed app ID or left as a constant
+          <ConnectWalletButton userId="hades" />
         )}
       </li>
     </ul>

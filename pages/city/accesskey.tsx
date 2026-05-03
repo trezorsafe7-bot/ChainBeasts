@@ -124,7 +124,7 @@ const Mint = () => {
     });
 
   useEffect(() => {
-    console.log(proxyMintedAccessKey);
+    // console.log(proxyMintedAccessKey);
   }, [successProxyMintAccessKey, errorProxyMintAccessKey]);
 
   if (!hasMounted) return <></>;
@@ -224,7 +224,7 @@ const Mint = () => {
                 </div>
                 <div className="px-2">
                   <p className="mb-1">
-                    <b>Join Battlemon Discord Server</b>
+                    <b>Join ChainBeasts Discord Server</b>
                   </p>
                 </div>
               </div>

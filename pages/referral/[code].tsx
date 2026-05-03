@@ -69,7 +69,7 @@ const ReferrralInvite = () => {
         ) : null}
       </div>
       <div className="basis-1/3 p-7 bg-blue bg-opacity-30 rounded-xl text-white">
-        <h2 className="text-3xl font-bold mb-5">Battlemon referral program</h2>
+        <h2 className="text-3xl font-bold mb-5">ChainBeasts referral program</h2>
         <p className="text-lg">
           In order to participate in our referral program and receive bonuses,
           generate your personal referral link and share it with others.

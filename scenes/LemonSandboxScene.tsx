@@ -76,7 +76,7 @@ export default function LemonSandboxScene() {
       LemonGenerator(scene).then((result) => {
         updateSomeLemon = async (lemon: LemonOwnedNft) => {
           await result.change(lemon);
-          console.log('changed');
+          // console.log('changed');
           scene.render();
         };
         scene.render();

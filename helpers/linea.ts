@@ -4,7 +4,7 @@ import { lineaTestnet } from 'wagmi/chains';
 
 export const lineaMainnet = {
   id: 59144,
-  name: 'Linea Mainnet',
+  name: 'Ether Mainnet',
   network: 'linea-mainnet',
   nativeCurrency: {
     name: 'Linea Ether',

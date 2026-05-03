@@ -11,7 +11,7 @@ const Game = () => {
 
   return (
     <>
-      <h2 className="text-center p-5 mt-5 pb-0">Connect Battlemon Game</h2>
+      <h2 className="text-center p-5 mt-5 pb-0">Connect ChainBests Game</h2>
       <h4 className="text-center p-3">
         Yuo need to install{' '}
         <a

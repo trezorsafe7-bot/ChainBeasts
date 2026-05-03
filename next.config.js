@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
+const vite = require('./helpers/vite');
+
 const nextConfig = {
   reactStrictMode: false,
-  swcMinify: true,
   images: {
-    unoptimized: true
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
+    unoptimized: true,
   },
   output: 'standalone',
+  // Turbopack replaces webpack in Next.js 16
+  // Alias react/react-dom to prevent duplicate instances (@suiet/wallet-kit fix)
+  turbopack: {
+    resolveAlias: {
+      'react': './node_modules/react',
+      'react-dom': './node_modules/react-dom',
+    },
+  },
   async rewrites() {
     return [
       {
@@ -17,6 +23,6 @@ const nextConfig = {
       },
     ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

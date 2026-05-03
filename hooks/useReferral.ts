@@ -44,7 +44,7 @@ export const useReferral = () => {
       const hash = await walletClient?.writeContract(request);
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
     }
   };
 

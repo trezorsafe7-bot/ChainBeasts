@@ -8,7 +8,7 @@ import Layout from '../components/Layout';
 import { useLemonStore } from '../helpers/lemonStore';
 import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import alchemy, { getLemons, mintLemonData } from '../helpers/alchemy';
-import { useAlert } from 'react-alert';
+import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 
 const HubScene = dynamic(async () => await import('../scenes/HubScene'), {
@@ -20,7 +20,6 @@ const Hub = () => {
     babylon: true,
     data: true,
   });
-  const alert = useAlert();
   const router = useRouter();
   const { address, status, isConnected } = useAccount();
   const [hasMounted, setHasMounted] = useState(false);
@@ -77,7 +76,7 @@ const Hub = () => {
       await write?.();
     } catch (e) {
       const { message } = e as Error;
-      alert.show(message, { type: 'error' });
+      toast.error(message);
       setLoader((loader) => ({ ...loader, data: false }));
     }
   };

@@ -5,7 +5,6 @@ import {
 } from 'wagmi';
 import { useCookies } from 'react-cookie';
 import { useContext, useEffect, useState } from 'react';
-import { useWeb3Modal } from '@web3modal/react';
 import { useRouter } from 'next/router';
 import { useReferral } from './useReferral';
 import toast from 'react-hot-toast';
@@ -25,7 +24,6 @@ export const useAuth = () => {
   const [cookies, setCookie] = useCookies(cookiesList);
   const { address } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  const { open } = useWeb3Modal();
   const router = useRouter();
   const { addReferral, getConductorAddress, isReferral } = useReferral();
 
@@ -54,7 +52,6 @@ export const useAuth = () => {
         'Content-Type': 'application/json',
       },
     });
-
     return (await data.json()) as UserType;
   };
 
@@ -76,16 +73,20 @@ export const useAuth = () => {
     return result as { token: string; userId: string };
   };
 
+  /**
+   * connectAuthServer — called after the wallet is already connected
+   * (wallet-connect-modal handles the connection UI).
+   * If no address yet, shows a toast instead of trying to open a modal.
+   */
   const connectAuthServer = async () => {
     if (!address) {
-      open();
+      toast.error('Please connect your wallet first.');
       return;
     }
-    const { token: guestToken } = await fetchGuest();
-    const { nonce } = await getNonce(guestToken);
-    let signature: `0x${string}` | null = null;
     try {
-      signature = await signMessageAsync({
+      const { token: guestToken } = await fetchGuest();
+      const { nonce } = await getNonce(guestToken);
+      const signature = await signMessageAsync({
         message: `Signing nonce: ${nonce}`,
       });
       const { token } = await authWallet(guestToken, address, signature);
@@ -95,7 +96,7 @@ export const useAuth = () => {
 
   const connectToAuthServerWithReferral = async () => {
     if (!address) {
-      open();
+      toast.error('Please connect your wallet first.');
       return;
     }
     const { token: guestToken } = await fetchGuest();
@@ -111,18 +112,15 @@ export const useAuth = () => {
     if (hasError) return;
     const { nonce } = await getNonce(guestToken);
     try {
-      let signature: `0x${string}` | null = null;
-      signature = await signMessageAsync({
+      const signature = await signMessageAsync({
         message: `Signing nonce: ${nonce}`,
       });
-
       const { token } = await authWallet(
         guestToken,
         address,
         signature,
         conductorAddress ? conductorAddress.address : ''
       );
-
       const profile = await fetchUserProfile(token);
       const isRegisteredUser =
         profile.conductorAddress !== conductorAddress?.address;
@@ -143,7 +141,6 @@ export const useAuth = () => {
         router.push('/referral');
         return;
       }
-
       await addReferral(conductorAddress.address);
       setAuthToken(token);
       router.push('/referral');

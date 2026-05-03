@@ -86,7 +86,7 @@ const Marketplace = () => {
       'basket_b.gltf',
       scene
     ).then((c) => {
-      console.log(c);
+      // console.log(c);
       const rootNode = c.meshes[0];
       rootNode.rotate(new Vector3(0, 200, 0), 1);
       rootNode.position = new Vector3(0, 0, 0);

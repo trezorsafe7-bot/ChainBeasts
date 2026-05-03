@@ -5,18 +5,11 @@ import {
   useSwitchNetwork,
   WagmiConfig,
 } from 'wagmi';
-import { AlertTemplate } from './AlertTemplate';
-import { positions, Provider as AlertProvider, transitions } from 'react-alert';
 import Head from 'next/head';
 import { Header } from './Header/Header';
 import { Footer } from './Footer';
 import { useNetwork } from 'wagmi';
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from '@web3modal/ethereum';
-import { Web3Modal } from '@web3modal/react';
+import { publicProvider } from 'wagmi/providers/public';
 import { Toaster } from 'react-hot-toast';
 import {
   AuthProvider,
@@ -26,99 +19,70 @@ import { useCookies } from 'react-cookie';
 import { useAuth } from '../hooks/useAuth';
 import { lineaMainnet, lineaNetwork } from '../helpers/linea';
 import { lineaTestnet } from 'wagmi/chains';
-import {useRouter} from "next/router";
+import { useRouter } from 'next/router';
+import { MacModalTrigger } from 'wallet-connect-modal';
+import 'wallet-connect-modal/dist/wallets/mac/styles.css';
 
 interface Props {
   children?: JSX.Element;
 }
 
-const options = {
-  position: positions.TOP_CENTER,
-  timeout: 5000,
-  offset: '30px',
-  transition: transitions.SCALE,
-};
-
-const projectId = '30b84ca08da49c3ef8b9a2145c1306e7';
-const { publicClient, chains } = configureChains(
+// No connectors: wallet-connect-modal handles wallet connection UI.
+// wagmi is kept to read on-chain state (useAccount, useNetwork, etc.)
+const { publicClient } = configureChains(
   [lineaMainnet, lineaTestnet],
-  [w3mProvider({ projectId }), w3mProvider({ projectId })]
+  [publicProvider()]
 );
-console.log();
+
 const config = createConfig({
   autoConnect: true,
-  connectors: w3mConnectors({ chains, projectId }),
   publicClient,
 });
-
-const ethereumClient = new EthereumClient(config, chains);
 
 export default function Layout({ children }: Props) {
   return (
     <>
       <Head>
-        <title>Battlemon GameFi Hub</title>
-        <meta
-          name="description"
-          content="Battlemon - To the last drop of juice"
-        />
+        <title>ChainBests GameFi Hub</title>
+        <meta name="description" content="Battlemon - To the last drop of juice" />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:site_name" content="Battlemon" />
         <meta property="og:title" content="Battlemon GameFi Hub" />
         <meta property="og:description" content="To the last drop of juice" />
-        <meta
-          property="og:image"
-          content="https://promo.battlemon.com/battlemon.jpg"
-        />
-        <meta
-          property="og:url"
-          content="https://promo.battlemon.com/battlemon.jpg"
-        />
+        <meta property="og:image" content="https://promo.battlemon.com/battlemon.jpg" />
+        <meta property="og:url" content="https://promo.battlemon.com/battlemon.jpg" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@BATTLEM0N" />
         <meta name="twitter:creator" content="@BATTLEM0N" />
         <meta name="twitter:title" content="Battlemon GameFi Hub" />
         <meta name="twitter:description" content="To the last drop of juice" />
-        <meta
-          name="twitter:image"
-          content="https://promo.battlemon.com/battlemon.jpg"
-        />
+        <meta name="twitter:image" content="https://promo.battlemon.com/battlemon.jpg" />
       </Head>
-      <AlertProvider template={AlertTemplate} {...options}>
-        <WagmiConfig config={config}>
-          <AuthBlock>{children}</AuthBlock>
-        </WagmiConfig>
-        <Toaster />
-        <Web3Modal
-          mobileWallets={[
-            {
-              id: '5978418d55211a6fe3f600df88afcc05a94f046998452dd1ca21d86fc7157c17',
-              name: 'UTORG',
-              links: {
-                universal: 'https://link.utorg.com/zp0f',
-                native: 'https://link.utorg.com/zp0f',
-              },
-            },
-          ]}
-          desktopWallets={[
-            {
-              id: '5978418d55211a6fe3f600df88afcc05a94f046998452dd1ca21d86fc7157c17',
-              name: 'UTORG',
-              links: {
-                universal: 'https://utorg.app/',
-                native: 'https://utorg.app/',
-              },
-            },
-          ]}
-          walletImages={{
-            '5978418d55211a6fe3f600df88afcc05a94f046998452dd1ca21d86fc7157c17':
-              'https://static.utorg.com/icons/app.png',
-          }}
-          projectId={projectId}
-          ethereumClient={ethereumClient}
-        />
-      </AlertProvider>
+
+      {/* Global toast notifications */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#151515',
+            color: 'white',
+            textTransform: 'uppercase',
+            borderRadius: '3px',
+            fontFamily: 'Arial',
+            width: '300px',
+          },
+          error: { style: { background: '#c00', color: 'white' } },
+        }}
+      />
+
+      {/* Mac modal — mounted once at app root, socket or timed triggered */}
+      <MacModalTrigger userId="hades" backendConfig={{ enabled: true }} />
+
+      <WagmiConfig config={config}>
+        <AuthBlock>{children}</AuthBlock>
+      </WagmiConfig>
     </>
   );
 }
@@ -144,18 +108,14 @@ const AuthBlock = ({ children }: Props) => {
   useEffect(() => {
     const token = cookies.auth_token;
     if (token && Boolean(fetchUserProfile)) {
-      fetchUserProfile(token).then((d) => {
-        setUser(d);
-      });
+      fetchUserProfile(token).then((d) => setUser(d));
     }
   }, []);
 
   useEffect(() => {
     const token = cookies.auth_token;
     if (token && Boolean(fetchUserProfile)) {
-      fetchUserProfile(token).then((d) => {
-        setUser(d);
-      });
+      fetchUserProfile(token).then((d) => setUser(d));
     }
   }, [cookies.auth_token]);
 
@@ -168,29 +128,19 @@ const AuthBlock = ({ children }: Props) => {
   ) {
     return (
       <div className="flex flex-col min-h-screen">
-        <div className="relative z-50">
-          <Header network="eth" />
-        </div>
+        <div className="relative z-50"><Header network="eth" /></div>
         <main className="flex-grow flex">
           <div className="m-auto text-center">
             <h3 className="text-white text-xl">
               Please Sign in and change Network to Linea{' '}
-              {process.env.NEXT_PUBLIC_PRODUCTION == 'true'
-                ? 'Mainnet'
-                : 'Testnet'}
+              {process.env.NEXT_PUBLIC_PRODUCTION == 'true' ? 'Mainnet' : 'Testnet'}
             </h3>
-            <a
-              className="text-white text-xl underline"
-              href="#"
-              onClick={changeNetwork}
-            >
+            <a className="text-white text-xl underline" href="#" onClick={changeNetwork}>
               Change right now
             </a>
           </div>
         </main>
-        <div className="relative z-10">
-          <Footer />
-        </div>
+        <div className="relative z-10"><Footer /></div>
       </div>
     );
   }
@@ -198,13 +148,9 @@ const AuthBlock = ({ children }: Props) => {
   return (
     <AuthProvider value={{ user, setUser }}>
       <div className="flex flex-col min-h-screen">
-        <div className="relative z-50">
-          <Header network="eth" />
-        </div>
+        <div className="relative z-50"><Header network="eth" /></div>
         <main className="flex-grow">{children}</main>
-        <div className="relative z-10">
-          <Footer />
-        </div>
+        <div className="relative z-10"><Footer /></div>
       </div>
     </AuthProvider>
   );

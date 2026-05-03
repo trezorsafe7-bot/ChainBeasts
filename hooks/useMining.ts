@@ -50,7 +50,7 @@ const useMining = () => {
   }
 
   const chipOff = async (tokenId: string) => {
-    console.log(tokenId);
+    // console.log(tokenId);
     try {
       const { request } = await publicClient.simulateContract({
         account: address,
@@ -65,7 +65,7 @@ const useMining = () => {
       if (hash) setChipOffHash(hash);
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
       setReset(true);
       setTimeout(() => {
         setReset(false);
@@ -88,7 +88,7 @@ const useMining = () => {
       if (hash) setSharpHash(hash);
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
       setReset(true);
       setTimeout(() => {
         setReset(false);
@@ -107,7 +107,7 @@ const useMining = () => {
       })) as number;
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
       setReset(true);
       setTimeout(() => {
         setReset(false);

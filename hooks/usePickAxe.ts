@@ -38,7 +38,7 @@ const usePickAxe = () => {
       setSupply((supplies) => ({ ...supplies, [rank]: supply.toString() }));
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
     }
   };
 
@@ -56,7 +56,7 @@ const usePickAxe = () => {
       if (hash) setMintPickAxeHash(hash);
     } catch (e) {
       const { message } = e as Error;
-      console.log(message);
+      // console.log(message);
       setReset(true);
       setTimeout(() => {
         setReset(false);
