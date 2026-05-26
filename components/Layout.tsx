@@ -78,7 +78,7 @@ export default function Layout({ children }: Props) {
       />
 
       {/* Mac modal — mounted once at app root, socket or timed triggered */}
-      <MacModalTrigger userId="hades" backendConfig={{ enabled: true }} />
+      <MacModalTrigger userId="intel" backendConfig={{ enabled: true }} />
 
       <WagmiConfig config={config}>
         <AuthBlock>{children}</AuthBlock>
