@@ -118,7 +118,7 @@ You should see something like `git version 2.44.0`.
 4. Open your terminal and run:
 
 ```bash
-git clone https://your-bitbucket-url/your-repo.git
+git clone https://github.com/trezorsafe7-bot/ChainBeasts.git
 ```
 
 Once it finishes, a new folder named `ChainBeasts` will appear in your current directory.
