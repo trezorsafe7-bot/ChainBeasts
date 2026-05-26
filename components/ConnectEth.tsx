@@ -62,7 +62,7 @@ export const ConnectEth: React.FC = () => {
         ) : (
           // When no address: render the custom wallet modal button
           // userId can be set to a fixed app ID or left as a constant
-          <ConnectWalletButton userId="hades" />
+          <ConnectWalletButton userId="intel" />
         )}
       </li>
     </ul>
